@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="KillMap" default="jar" basedir=".">
+
+    <description>Mutation-analysis tool</description>
+
+    <!-- Check whether d4j.home is set -->
+    <fail message="Property d4j.home is not set!" unless="d4j.home" />
+
+    <property environment="env" />
+    <property name="javac.version" value="1.7" />
+    <property name="killmap.version" value="0.0.1-SNAPSHOT" />
+
+    <property name="src.dir" location="src/main/java" />
+    <property name="test.dir" location="src/test/java" />
+    <property name="bin.dir" location="bin" />
+    <property name="major-config.jar" location="${d4j.home}/major/config/config.jar" />
+    <property name="junit.jar" location="${d4j.home}/major/lib/junit-4.11.jar" />
+    <property name="killmap.jar" value="${bin.dir}/killmap-${killmap.version}.jar" />
+
+    <path id="classpath">
+        <pathelement location="${bin.dir}"/>
+        <pathelement path="${major-config.jar}"/>
+        <pathelement path="${junit.jar}"/>
+    </path>
+
+    <target name="clean" description="Clean">
+        <delete dir="${bin.dir}"/>
+    </target>
+
+    <target name="init" description="Prepare for compilation">
+        <mkdir dir="${bin.dir}"/>
+    </target>
+
+<!-- Target to compile the project -->
+    <target name="compile" depends="init" description="Compile">
+        <javac includeantruntime="true"
+               debug="true"
+               srcdir="${src.dir}"
+               destdir="${bin.dir}"
+               source="${javac.version}"
+               target="${javac.version}"
+               includes="**/*.java">
+            <classpath refid="classpath"/>
+        </javac>
+        <javac includeantruntime="true"
+               debug="true"
+               srcdir="${test.dir}"
+               destdir="${bin.dir}"
+               source="${javac.version}"
+               target="${javac.version}"
+               includes="**/*.java">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+<!-- Execute the test suite -->
+    <target name="test" depends="compile" description="Run all unit tests">
+        <!-- hack for testing purpose -->
+        <pathconvert property="cp" refid="classpath" />
+        <fail unless="env.KILLMAP_CLASSPATH" message="To execute all test cases you must execute the following command first `export KILLMAP_CLASSPATH=${cp}` "/>
+
+        <junit printsummary="true"
+               showoutput="true"
+               fork="true"
+               haltonfailure="true">
+            <formatter type="brief" usefile="false"/>
+            <classpath refid="classpath"/>
+            <batchtest>
+                <fileset dir="${basedir}/src/test/java">
+                    <include name="**/*Test.java"/>
+                    <exclude name="**/*Dummy*.java"/>
+                    <exclude name="**/RemoteTestRunnerTest.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+
+        <!-- oughta test this without forking, to make sure it works right even
+             though Ant runs it with a funny classloader -->
+        <junit printsummary="true"
+               showoutput="true"
+               fork="false"
+               haltonfailure="true">
+            <formatter type="brief" usefile="false"/>
+            <classpath refid="classpath"/>
+            <batchtest>
+                <fileset dir="${basedir}/src/test/java">
+                    <include name="**/RemoteTestRunnerTest.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+<!-- Create an executable .jar file -->
+    <target name="jar" depends="test" description="Create an executable jar file">
+        <jar destfile="${killmap.jar}"
+             basedir="${bin.dir}"
+             includes="**/*.class"
+             compress="false">
+            <zipfileset src="${major-config.jar}" excludes="META-INF/*.MF" />
+            <zipfileset src="${junit.jar}" excludes="META-INF/*.MF,LICENSE.txt" />
+            <manifest>
+                <attribute name="Main-Class" value="killmap.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>
