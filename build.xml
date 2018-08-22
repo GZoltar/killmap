@@ -3,18 +3,20 @@
 
     <description>Mutation-analysis tool</description>
 
-    <!-- Check whether d4j.home is set -->
-    <fail message="Property d4j.home is not set!" unless="d4j.home" />
-
     <property environment="env" />
     <property name="javac.version" value="1.7" />
     <property name="killmap.version" value="0.0.1-SNAPSHOT" />
 
     <property name="src.dir" location="src/main/java" />
     <property name="test.dir" location="src/test/java" />
+    <property name="lib.dir" location="lib" />
     <property name="bin.dir" location="bin" />
-    <property name="major-config.jar" location="${d4j.home}/major/config/config.jar" />
-    <property name="junit.jar" location="${d4j.home}/major/lib/junit-4.11.jar" />
+
+    <property name="major.version" value="1.3.2_jre7" />
+    <property name="major.zip" value="${lib.dir}/major-${major.version}.zip" />
+    <property name="major.dir" value="${lib.dir}/major" />
+    <property name="major-config.jar" value="${major.dir}/config/config.jar" />
+    <property name="junit.jar" value="${major.dir}/lib/junit-4.11.jar" />
     <property name="killmap.jar" value="${bin.dir}/killmap-${killmap.version}.jar" />
 
     <path id="classpath">
@@ -29,6 +31,14 @@
 
     <target name="init" description="Prepare for compilation">
         <mkdir dir="${bin.dir}"/>
+
+        <mkdir dir="${lib.dir}"/>
+        <get src="http://mutation-testing.org/downloads/files/major-${major.version}.zip"
+             dest="${lib.dir}/"
+             usetimestamp="true"
+             skipexisting="true"/>
+        <mkdir dir="${major.dir}"/>
+        <unzip src="${major.zip}" dest="${lib.dir}" overwrite="false"/>
     </target>
 
 <!-- Target to compile the project -->
