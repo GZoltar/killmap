@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 #
+# Copyright (C) 2018 Spencer Pearson, José Campos and killmap contributors.
+# 
+# This file is part of killmap.
+# 
+# killmap is free software: you can redistribute it and/or modify it under the terms of the GNU
+# Lesser General Public License as published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+# 
+# killmap is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License along with killmap.
+# If not, see <https://www.gnu.org/licenses/>.
+#
+#
 # Defines a bunch of little helper functions to glue together D4J and
 # Killmap. You probably will not have to use this yourself -- it is
 # mostly just scaffolding for `generate-matrix.sh`.
