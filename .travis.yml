@@ -1,0 +1,12 @@
+language: java
+
+# Use container-based infrastructure:
+sudo: false
+
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+script:
+  - export KILLMAP_CLASSPATH=/home/travis/build/GZoltar/killmap/bin:/home/travis/build/GZoltar/killmap/lib/major/config/config.jar:/home/travis/build/GZoltar/killmap/lib/major/lib/junit-4.11.jar
+  - ant -f build.xml clean jar

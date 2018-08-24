@@ -1,5 +1,7 @@
 # Killmap
 
+[![Build Status](https://travis-ci.org/GZoltar/killmap.svg?branch=master)](https://travis-ci.org/GZoltar/killmap)
+
 `killmap` is an utility Java program that allows developers to perform
 mutation-analysis whose output could then be used to perform mutation-based
 fault localization. Although `killmap` does not depend on the
